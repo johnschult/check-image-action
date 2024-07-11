@@ -1,0 +1,12 @@
+name: Check for Chainguard Images
+description: Check if the image used in Dockerfile is a Chainguard image
+runs:
+  using: composite
+  steps:
+    - name: Check base images
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.12.4'
+      shell: bash
+      run: python ./check_images.py
