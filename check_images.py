@@ -14,11 +14,7 @@
 # otherwise, it will return 0
 
 import os
-
-class allowed_base_images:
-    NODE = 'cgr.dev/chainguard/node'
-    NODE_DEV = 'cgr.dev/chainguard/node-dev'
-    GO = 'cgr.dev/chainguard/go'
+import json
 
 class colors:
     BLUE = '\033[94m'
@@ -27,6 +23,10 @@ class colors:
     FAIL = '\033[91m'
     ENDC = '\033[0m'
     UNDERLINE = '\033[4m'
+
+with open('chainguard.json') as file:
+    data = json.load(file)
+    allowed_base_images = data["images"]
 
 def find_dockerfiles():
     dockerfiles = []
@@ -51,7 +51,7 @@ def extract_parts(line):
     return platform_part, image_part, as_part
 
 def check_image(image, allowed_base_images):
-    if image in allowed_base_images.__dict__.values():
+    if image in allowed_base_images:
         return f" {colors.BLUE}{image}{colors.ENDC}", False
     else:
         return f" {colors.WARNING}{image}{colors.ENDC}", True

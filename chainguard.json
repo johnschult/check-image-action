@@ -1,0 +1,12 @@
+{
+    "images": [
+        "cgr.dev/chainguard/node:latest",
+        "cgr.dev/chainguard/node:latest-dev",
+        "cgr.dev/chainguard/go:latest",
+        "cgr.dev/chainguard/go:latest-dev",
+        "cgr.dev/chainguard/jdk:latest",
+        "cgr.dev/chainguard/jdk:latest-dev",
+        "cgr.dev/chainguard/jre:latest",
+        "cgr.dev/chainguard/jre:latest-dev"
+    ]
+}
