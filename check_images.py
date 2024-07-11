@@ -15,7 +15,34 @@
 
 import os
 import json
-import ansi_colors
+
+class Colors:
+    """ ANSI color codes """
+    BLACK = "\033[0;30m"
+    RED = "\033[0;31m"
+    GREEN = "\033[0;32m"
+    BROWN = "\033[0;33m"
+    BLUE = "\033[0;34m"
+    PURPLE = "\033[0;35m"
+    CYAN = "\033[0;36m"
+    LIGHT_GRAY = "\033[0;37m"
+    DARK_GRAY = "\033[1;30m"
+    LIGHT_RED = "\033[1;31m"
+    LIGHT_GREEN = "\033[1;32m"
+    YELLOW = "\033[1;33m"
+    LIGHT_BLUE = "\033[1;34m"
+    LIGHT_PURPLE = "\033[1;35m"
+    LIGHT_CYAN = "\033[1;36m"
+    LIGHT_WHITE = "\033[1;37m"
+    BOLD = "\033[1m"
+    FAINT = "\033[2m"
+    ITALIC = "\033[3m"
+    UNDERLINE = "\033[4m"
+    BLINK = "\033[5m"
+    NEGATIVE = "\033[7m"
+    CROSSED = "\033[9m"
+    END = "\033[0m"
+
 
 def find_dockerfiles():
     dockerfiles = []
@@ -41,9 +68,9 @@ def extract_parts(line):
 
 def check_image(image, allowed_base_images):
     if image in allowed_base_images:
-        return f" {colors.GREEN}{image}{colors.END}", False
+        return f" {Colors.GREEN}{image}{Colors.END}", False
     else:
-        return f" {colors.BROWN}{image}{colors.END}", True
+        return f" {Colors.BROWN}{image}{Colors.END}", True
 
 def process_line(line, line_number, allowed_base_images):
     line = " ".join(line.strip().split())
@@ -54,7 +81,7 @@ def process_line(line, line_number, allowed_base_images):
         if has_error:
             print(f"  {line_number}: FROM{platform_part}{formatted_image_part} {as_part}")
         else:
-            print(f"{colors.BLACK}  {line_number}: FROM{platform_part}{formatted_image_part} {colors.BLACK}{as_part}{colors.END}")
+            print(f"{Colors.BLACK}  {line_number}: FROM{platform_part}{formatted_image_part} {Colors.BLACK}{as_part}{Colors.END}")
     return has_error
 
 def check_dockerfiles(dockerfiles):
@@ -65,7 +92,7 @@ def check_dockerfiles(dockerfiles):
     number_of_errors = 0
     
     for dockerfile in dockerfiles:
-        print(f"{colors.CYAN}{colors.UNDERLINE}{dockerfile}{colors.END}")
+        print(f"{Colors.CYAN}{Colors.UNDERLINE}{dockerfile}{Colors.END}")
         with open(dockerfile, 'r') as file:
             lines = file.readlines()
             for line_number, line in enumerate(lines, start=1):
@@ -76,14 +103,13 @@ def check_dockerfiles(dockerfiles):
 
 # main script starts here
 
-colors = ansi_colors.Colors()
-print(f"\n{colors.BLACK}⛭ Checking Dockerfiles...{colors.END}\n")
+print(f"\n{Colors.BLACK}⛭ Checking Dockerfiles...{Colors.END}\n")
 dockerfiles = find_dockerfiles()
 errors = check_dockerfiles(dockerfiles)
 
 if errors > 0:
-    print(f"{colors.BROWN}⚠️ Found {errors} Docker image(s) not in allowed list{colors.END}")
-    print(f"{colors.BLUE}ℹ {colors.ITALIC}For more information see: https://github.com/johnschult/check-image-action{colors.END}\n")
+    print(f"{Colors.BROWN}⚠️ Found {errors} Docker image(s) not in allowed list{Colors.END}")
+    print(f"{Colors.BLUE}ℹ {Colors.ITALIC}For more information see: https://github.com/johnschult/check-image-action{Colors.END}\n")
     exit(1)
 else:
-    print(f"{colors.GREEN}[✓] All base images are OK{colors.END}\n")
+    print(f"{Colors.GREEN}✓ All base images are OK{Colors.END}\n")
