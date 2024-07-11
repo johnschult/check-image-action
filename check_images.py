@@ -16,17 +16,17 @@
 import os
 import json
 
-class colors:
+class Colors:
     BLUE = '\033[94m'
     GREEN = '\033[92m'
     WARNING = '\033[93m'
     FAIL = '\033[91m'
     ENDC = '\033[0m'
     UNDERLINE = '\033[4m'
+    FAINT = "\033[2m"
+    ITALIC = "\033[3m"
+    LIGHT_GRAY = "\033[0;37m"
 
-with open(os.environ['CHAINGUARD_FILE']) as file:
-    data = json.load(file)
-    allowed_base_images = data["images"]
 
 def find_dockerfiles():
     dockerfiles = []
@@ -52,9 +52,9 @@ def extract_parts(line):
 
 def check_image(image, allowed_base_images):
     if image in allowed_base_images:
-        return f" {colors.BLUE}{image}{colors.ENDC}", False
+        return f" {Colors.GREEN}{image}{Colors.ENDC}", False
     else:
-        return f" {colors.WARNING}{image}{colors.ENDC}", True
+        return f" {Colors.WARNING}{image}{Colors.ENDC}", True
 
 def process_line(line, line_number, allowed_base_images):
     line = " ".join(line.strip().split())
@@ -62,13 +62,21 @@ def process_line(line, line_number, allowed_base_images):
     if line.startswith("FROM"):
         platform_part, image, as_part = extract_parts(line)
         formatted_image_part, has_error = check_image(image, allowed_base_images)
-        print(f" {line_number}: FROM{platform_part}{formatted_image_part} {as_part}")
+        if has_error:
+            print(f"  {line_number}: FROM{platform_part}{formatted_image_part} {as_part}")
+        else:
+            print(f"{Colors.FAINT}  {line_number}: FROM{platform_part}{formatted_image_part} {Colors.FAINT}{as_part}{Colors.ENDC}")
     return has_error
 
-def check_dockerfiles(dockerfiles, allowed_base_images):
+def check_dockerfiles(dockerfiles):
+    with open(os.environ['CHAINGUARD_FILE']) as file:
+        data = json.load(file)
+        allowed_base_images = data["images"]
+
     number_of_errors = 0
+    
     for dockerfile in dockerfiles:
-        print(f"{colors.UNDERLINE}{dockerfile}{colors.ENDC}")
+        print(f"{Colors.UNDERLINE}{dockerfile}{Colors.ENDC}")
         with open(dockerfile, 'r') as file:
             lines = file.readlines()
             for line_number, line in enumerate(lines, start=1):
@@ -77,12 +85,15 @@ def check_dockerfiles(dockerfiles, allowed_base_images):
         print()
     return number_of_errors
 
+# main script starts here
+
+print(f"\n{Colors.FAINT}Checking Dockerfiles...{Colors.ENDC}\n")
 dockerfiles = find_dockerfiles()
-errors = check_dockerfiles(dockerfiles, allowed_base_images)
+errors = check_dockerfiles(dockerfiles)
+
 if errors > 0:
-    print(f"{colors.FAIL} !! Found {errors} Docker image(s) that are not allowed{colors.ENDC}\n")
-    print(f"{colors.BLUE}For more information see: https://github.com/johnschult/check-image-action{colors.ENDC}")
+    print(f"{Colors.WARNING}[!] Found {errors} Docker image(s) not in allowed list{Colors.ENDC}")
+    print(f"{Colors.BLUE}[i] {Colors.ITALIC}For more information see: https://github.com/johnschult/check-image-action{Colors.ENDC}\n")
     exit(1)
 else:
-    print(f"{colors.GREEN}✓ All base images are OK{colors.ENDC}\n")
-    exit(0)
+    print(f"{Colors.GREEN}✓ All base images are OK{Colors.ENDC}\n")
