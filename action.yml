@@ -10,13 +10,7 @@ runs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.12.4'
-
-    - name: Set GitHub Path
-      run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
-      shell: bash
-      env:
-        GITHUB_ACTION_PATH: ${{ github.action_path }}
     
     - name: Run check_images script
-      run: python check_images.py
+      run: python ${{ github.action_path }}/check_images.py
       shell: bash
