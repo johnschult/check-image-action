@@ -81,6 +81,7 @@ dockerfiles = find_dockerfiles()
 errors = check_dockerfiles(dockerfiles, allowed_base_images)
 if errors > 0:
     print(f"{colors.FAIL} !! Found {errors} Docker image(s) that are not allowed{colors.ENDC}\n")
+    print(f"{colors.BLUE}For more information see: https://github.com/johnschult/check-image-action{colors.ENDC}")
     exit(1)
 else:
     print(f"{colors.GREEN}✓ All base images are OK{colors.ENDC}\n")
