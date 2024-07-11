@@ -70,7 +70,7 @@ def check_image(image, allowed_base_images):
     if image in allowed_base_images:
         return f" {Colors.GREEN}{image}{Colors.END}", False
     else:
-        return f" {Colors.BROWN}{image}{Colors.END}", True
+        return f" {Colors.YELLOW}{image}{Colors.END}", True
 
 def process_line(line, line_number, allowed_base_images):
     line = " ".join(line.strip().split())
@@ -79,9 +79,9 @@ def process_line(line, line_number, allowed_base_images):
         platform_part, image, as_part = extract_parts(line)
         formatted_image_part, has_error = check_image(image, allowed_base_images)
         if has_error:
-            print(f"  {line_number}: FROM{platform_part}{formatted_image_part} {as_part}")
+            print(f"{Colors.LIGHT_WHITE}  {line_number}: FROM{platform_part}{formatted_image_part} {Colors.LIGHT_WHITE}{as_part}{Colors.END}")
         else:
-            print(f"{Colors.BLACK}  {line_number}: FROM{platform_part}{formatted_image_part} {Colors.BLACK}{as_part}{Colors.END}")
+            print(f"  {line_number}: FROM{platform_part}{formatted_image_part} {as_part}")
     return has_error
 
 def check_dockerfiles(dockerfiles):
@@ -103,12 +103,12 @@ def check_dockerfiles(dockerfiles):
 
 # main script starts here
 
-print(f"\n{Colors.BLACK}⛭ Checking Dockerfiles...{Colors.END}\n")
+print(f"\n⛭ Checking Dockerfiles...\n")
 dockerfiles = find_dockerfiles()
 errors = check_dockerfiles(dockerfiles)
 
 if errors > 0:
-    print(f"{Colors.BROWN}⚠️ Found {errors} Docker image(s) not in allowed list{Colors.END}")
+    print(f"{Colors.YELLOW}⚠️ Found {errors} Docker image(s) not in allowed list{Colors.END}")
     print(f"{Colors.BLUE}ℹ {Colors.ITALIC}For more information see: https://github.com/johnschult/check-image-action{Colors.END}\n")
     exit(1)
 else:
