@@ -3,9 +3,20 @@ description: Check if the image used in Dockerfile is a Chainguard image
 runs:
   using: composite
   steps:
-    - name: Check base images
-    - uses: actions/setup-python@v4
+    - name: Check out the repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.12.4
+      uses: actions/setup-python@v4
       with:
         python-version: '3.12.4'
-    - run: python ./check_images.py
+
+    - name: Set GitHub Path
+      run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
+      shell: bash
+      env:
+        GITHUB_ACTION_PATH: ${{ github.action_path }}
+    
+    - name: Run check_images script
+      run: python check_images.py
       shell: bash
