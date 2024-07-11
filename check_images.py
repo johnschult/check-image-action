@@ -25,8 +25,7 @@ class Colors:
     UNDERLINE = '\033[4m'
     FAINT = "\033[2m"
     ITALIC = "\033[3m"
-    LIGHT_GRAY = "\033[0;37m"
-
+    DARK_GRAY = "\033[1;30m"
 
 def find_dockerfiles():
     dockerfiles = []
@@ -65,7 +64,7 @@ def process_line(line, line_number, allowed_base_images):
         if has_error:
             print(f"  {line_number}: FROM{platform_part}{formatted_image_part} {as_part}")
         else:
-            print(f"{Colors.FAINT}  {line_number}: FROM{platform_part}{formatted_image_part} {Colors.FAINT}{as_part}{Colors.ENDC}")
+            print(f"{Colors.DARK_GRAY}  {line_number}: FROM{platform_part}{formatted_image_part} {Colors.DARK_GRAY}{as_part}{Colors.ENDC}")
     return has_error
 
 def check_dockerfiles(dockerfiles):
@@ -87,7 +86,7 @@ def check_dockerfiles(dockerfiles):
 
 # main script starts here
 
-print(f"\n{Colors.FAINT}Checking Dockerfiles...{Colors.ENDC}\n")
+print(f"\n{Colors.DARK_GRAY}Checking Dockerfiles...{Colors.ENDC}\n")
 dockerfiles = find_dockerfiles()
 errors = check_dockerfiles(dockerfiles)
 
