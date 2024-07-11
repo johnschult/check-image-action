@@ -13,4 +13,6 @@ runs:
     
     - name: Run check_images script
       run: python ${{ github.action_path }}/check_images.py
+      env:
+        CHAINGUARD_FILE: ${{ github.action_path }}/chainguard.json
       shell: bash

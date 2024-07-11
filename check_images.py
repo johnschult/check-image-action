@@ -24,7 +24,7 @@ class colors:
     ENDC = '\033[0m'
     UNDERLINE = '\033[4m'
 
-with open('chainguard.json') as file:
+with open(os.environ['CHAINGUARD_FILE']) as file:
     data = json.load(file)
     allowed_base_images = data["images"]
 
